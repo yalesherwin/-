@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CNU STEEL | Tools Portal</title>
   <style>
     body {
@@ -46,14 +45,22 @@
       background-color: #0056b3;
     }
     .logo {
-      width: 60px;
+      width: 100px;
       margin-bottom: 20px;
+    }
+    @media screen and (max-width: 600px) {
+      h1 { font-size: 22px; }
+      p { font-size: 14px; }
+      .link-button { padding: 14px; font-size: 16px; }
+      .container { padding: 24px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Steel_I-beam_icon.svg/64px-Steel_I-beam_icon.svg.png" alt="CNU STEEL Logo">
+    <a href="https://www.cnu-steel.com" target="_blank">
+      <img class="logo" src="./chinacnu_logo.jpg" alt="CHINACNU STEEL Logo" />
+    </a>
     <h1>Welcome to CNU STEEL Tools</h1>
     <p>Access our online steel weight calculator tool in English & Chinese.</p>
     <a class="link-button" href="./calculate.html">👉 Launch Calculator Tool</a>
