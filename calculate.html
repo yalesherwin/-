@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>钢材重量计算器 | Steel Weight Calculator</title>
+  <title>CHINACNU 钢材重量计算器 | Steel Weight Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
       background: white;
       padding: 2em;
       border-radius: 16px;
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
@@ -32,7 +32,7 @@
     }
     .result {
       margin-top: 2em;
-      font-size: 1.2em;
+      font-size: 1.1em;
       font-weight: bold;
       color: #004085;
     }
@@ -60,7 +60,7 @@
 </head>
 <body>
   <div class="calculator">
-   <img src="./chinacnu_logo.jpg" alt="CHINACNU STEEL Logo" style="width: 100px; display:block; margin:auto;" />
+    <img src="./chinacnu_logo.jpg" alt="CHINACNU STEEL Logo" style="width: 100px; display:block; margin:auto;" />
 
     <h2 style="text-align:center">钢材重量计算器<br><span style="font-size: 0.8em; color: gray;">Steel Weight Calculator</span></h2>
 
@@ -70,6 +70,8 @@
         <option value="angle">角钢 (Angle Steel)</option>
         <option value="ibeam">工字钢 (I-Beam)</option>
         <option value="hbeam">H型钢 (H-Beam)</option>
+        <option value="csteel">C型钢 (C Channel)</option>
+        <option value="flat">扁钢 (Flat Bar)</option>
         <option value="sheetpile">钢板桩 (Sheet Pile)</option>
         <option value="squarepipe">镀锌方管 (Galvanized Square Pipe)</option>
         <option value="roundpipe">镀锌圆管 (Galvanized Round Pipe)</option>
@@ -79,98 +81,121 @@
 
     <div id="fields"></div>
 
+    <label>长度 (Length) 米:</label>
+    <input type="number" id="length" value="1" />
+
     <button onclick="calculateWeight()">计算重量 / Calculate</button>
     <div class="result" id="result"></div>
+
+    <div style="text-align:center; margin-top:1.5em;">
+      <a href="https://wa.me/8619154316688" target="_blank"
+         style="text-decoration:none; background:#25D366; color:white; padding:10px 20px; border-radius:8px; display:inline-block;">
+        💬 联系我们（WhatsApp）
+      </a>
+    </div>
   </div>
 
   <div class="footer">
     CNU STEEL | 钢铁外贸工具 · Steel Export Tools
   </div>
+<script>
+  function toggleFields() {
+    const type = document.getElementById('steelType').value;
+    let html = '';
 
-  <script>
-    function toggleFields() {
-      const type = document.getElementById('steelType').value;
-      let html = '';
-
-      if (type === 'angle') {
-        html += `<label>角钢类型 (Angle Type):
-          <select id="angleType">
-            <option value="equal">等边角钢 (Equal Angle)</option>
-            <option value="unequal">不等边角钢 (Unequal Angle)</option>
-          </select></label>`;
-        html += `<label>边长1 (Side A) mm:<input type="number" id="sideA"></label>`;
-        html += `<label>边长2 (Side B) mm:<input type="number" id="sideB"></label>`;
-        html += `<label>边厚 (Thickness) mm:<input type="number" id="thickness"></label>`;
-      } else if (type === 'ibeam' || type === 'hbeam') {
-        html += `<label>高度 H (mm):<input type="number" id="h"></label>`;
-        html += `<label>翼缘宽度 B (mm):<input type="number" id="b"></label>`;
-        html += `<label>腹板厚度 tw (mm):<input type="number" id="tw"></label>`;
-        html += `<label>翼缘厚度 tf (mm):<input type="number" id="tf"></label>`;
-      } else if (type === 'sheetpile') {
-        html += `<label>截面面积 (Section Area) cm²/m:<input type="number" id="area"></label>`;
-      } else if (type === 'squarepipe') {
-        html += `<label>边长 (Side) mm:<input type="number" id="side"></label>`;
-        html += `<label>壁厚 (Wall Thickness) mm:<input type="number" id="wall"></label>`;
-      } else if (type === 'roundpipe' || type === 'ssroundpipe') {
-        html += `<label>外径 (Outer Diameter) mm:<input type="number" id="outer"></label>`;
-        html += `<label>壁厚 (Wall Thickness) mm:<input type="number" id="wall"></label>`;
-      }
-
-      document.getElementById('fields').innerHTML = html;
+    if (type === 'angle') {
+      html += `<label>角钢类型 (Angle Type):
+        <select id="angleType">
+          <option value="equal">等边角钢 (Equal)</option>
+          <option value="unequal">不等边角钢 (Unequal)</option>
+        </select></label>`;
+      html += `<label>边长1 (Side A) mm:<input type="number" id="sideA"></label>`;
+      html += `<label>边长2 (Side B) mm:<input type="number" id="sideB"></label>`;
+      html += `<label>边厚 (Thickness) mm:<input type="number" id="thickness"></label>`;
+    } else if (type === 'ibeam' || type === 'hbeam') {
+      html += `<label>高度 H (mm):<input type="number" id="h"></label>`;
+      html += `<label>翼缘宽度 B (mm):<input type="number" id="b"></label>`;
+      html += `<label>腹板厚度 tw (mm):<input type="number" id="tw"></label>`;
+      html += `<label>翼缘厚度 tf (mm):<input type="number" id="tf"></label>`;
+    } else if (type === 'csteel') {
+      html += `<label>腹宽 Web Width (mm):<input type="number" id="web"></label>`;
+      html += `<label>边宽 Flange Width (mm):<input type="number" id="flange"></label>`;
+      html += `<label>边厚 Flange Thickness (mm):<input type="number" id="flangeThick"></label>`;
+      html += `<label>腹厚 Web Thickness (mm):<input type="number" id="webThick"></label>`;
+    } else if (type === 'flat') {
+      html += `<label>宽度 Width (mm):<input type="number" id="width"></label>`;
+      html += `<label>厚度 Thickness (mm):<input type="number" id="thickness"></label>`;
+    } else if (type === 'sheetpile') {
+      html += `<label>截面面积 Section Area (cm²/m):<input type="number" id="area"></label>`;
+    } else if (type === 'squarepipe') {
+      html += `<label>边长 Side (mm):<input type="number" id="side"></label>`;
+      html += `<label>壁厚 Wall Thickness (mm):<input type="number" id="wall"></label>`;
+    } else if (type === 'roundpipe' || type === 'ssroundpipe') {
+      html += `<label>外径 Outer Diameter (mm):<input type="number" id="outer"></label>`;
+      html += `<label>壁厚 Wall Thickness (mm):<input type="number" id="wall"></label>`;
     }
 
-    function calculateWeight() {
-      const type = document.getElementById('steelType').value;
-      let weight = 0;
+    document.getElementById('fields').innerHTML = html;
+  }
 
-      if (type === 'angle') {
-        const a = parseFloat(document.getElementById('sideA').value);
-        const b = parseFloat(document.getElementById('sideB').value);
-        const t = parseFloat(document.getElementById('thickness').value);
-        if (isNaN(a) || isNaN(b) || isNaN(t)) {
-          document.getElementById('result').innerText = '❌ 请输入所有角钢参数';
-          return;
-        }
-        weight = ((a + b - t) * t * 7.85) / 1000;
-      } else if (type === 'ibeam' || type === 'hbeam') {
-        const h = parseFloat(document.getElementById('h').value);
-        const b = parseFloat(document.getElementById('b').value);
-        const tw = parseFloat(document.getElementById('tw').value);
-        const tf = parseFloat(document.getElementById('tf').value);
-        if (isNaN(h) || isNaN(b) || isNaN(tw) || isNaN(tf)) {
-          document.getElementById('result').innerText = '❌ 请输入所有型钢参数';
-          return;
-        }
-        weight = (2 * tf * b + (h - 2 * tf) * tw) * 7.85 / 1000;
-      } else if (type === 'sheetpile') {
-        const area = parseFloat(document.getElementById('area').value);
-        if (isNaN(area)) {
-          document.getElementById('result').innerText = '❌ 请输入截面面积';
-          return;
-        }
-        weight = area * 7.85 / 100;
-      } else if (type === 'squarepipe') {
-        const side = parseFloat(document.getElementById('side').value);
-        const wall = parseFloat(document.getElementById('wall').value);
-        if (isNaN(side) || isNaN(wall)) {
-          document.getElementById('result').innerText = '❌ 请输入方管尺寸';
-          return;
-        }
-        weight = (4 * side * wall - 4 * wall * wall) * 7.85 / 1000;
-      } else if (type === 'roundpipe' || type === 'ssroundpipe') {
-        const outer = parseFloat(document.getElementById('outer').value);
-        const wall = parseFloat(document.getElementById('wall').value);
-        if (isNaN(outer) || isNaN(wall)) {
-          document.getElementById('result').innerText = '❌ 请输入圆管尺寸';
-          return;
-        }
-        weight = 0.02466 * (outer - wall) * wall;
-      }
+  function calculateWeight() {
+    const type = document.getElementById('steelType').value;
+    const len = parseFloat(document.getElementById('length').value || 1);
+    let weightPerMeter = 0;
 
-      document.getElementById('result').innerHTML = `✅ 理论重量约为 Approx. Weight: <strong>${weight.toFixed(3)} kg/m</strong>`;
+    if (type === 'angle') {
+      const a = parseFloat(document.getElementById('sideA').value);
+      const b = parseFloat(document.getElementById('sideB').value);
+      const t = parseFloat(document.getElementById('thickness').value);
+      if (isNaN(a) || isNaN(b) || isNaN(t)) return showError('请输入所有角钢参数');
+      weightPerMeter = ((a + b - t) * t * 7.85) / 1000;
+    } else if (type === 'ibeam' || type === 'hbeam') {
+      const h = parseFloat(document.getElementById('h').value);
+      const b = parseFloat(document.getElementById('b').value);
+      const tw = parseFloat(document.getElementById('tw').value);
+      const tf = parseFloat(document.getElementById('tf').value);
+      if (isNaN(h) || isNaN(b) || isNaN(tw) || isNaN(tf)) return showError('请输入所有型钢参数');
+      weightPerMeter = (2 * tf * b + (h - 2 * tf) * tw) * 7.85 / 1000;
+    } else if (type === 'csteel') {
+      const web = parseFloat(document.getElementById('web').value);
+      const flange = parseFloat(document.getElementById('flange').value);
+      const flangeT = parseFloat(document.getElementById('flangeThick').value);
+      const webT = parseFloat(document.getElementById('webThick').value);
+      if (isNaN(web) || isNaN(flange) || isNaN(flangeT) || isNaN(webT)) return showError('请输入 C 型钢参数');
+      weightPerMeter = ((2 * flange * flangeT) + (web * webT)) * 7.85 / 1000;
+    } else if (type === 'flat') {
+      const width = parseFloat(document.getElementById('width').value);
+      const thick = parseFloat(document.getElementById('thickness').value);
+      if (isNaN(width) || isNaN(thick)) return showError('请输入扁钢参数');
+      weightPerMeter = width * thick * 7.85 / 1000;
+    } else if (type === 'sheetpile') {
+      const area = parseFloat(document.getElementById('area').value);
+      if (isNaN(area)) return showError('请输入截面面积');
+      weightPerMeter = area * 7.85 / 100;
+    } else if (type === 'squarepipe') {
+      const side = parseFloat(document.getElementById('side').value);
+      const wall = parseFloat(document.getElementById('wall').value);
+      if (isNaN(side) || isNaN(wall)) return showError('请输入方管尺寸');
+      weightPerMeter = (4 * side * wall - 4 * wall * wall) * 7.85 / 1000;
+    } else if (type === 'roundpipe' || type === 'ssroundpipe') {
+      const outer = parseFloat(document.getElementById('outer').value);
+      const wall = parseFloat(document.getElementById('wall').value);
+      if (isNaN(outer) || isNaN(wall)) return showError('请输入圆管尺寸');
+      weightPerMeter = 0.02466 * (outer - wall) * wall;
     }
 
-    toggleFields();
-  </script>
+    const totalWeight = weightPerMeter * len;
+    document.getElementById('result').innerHTML = `
+      ✅ 每米重量 Approx. Weight per meter: <strong>${weightPerMeter.toFixed(3)} kg/m</strong><br>
+      📦 总重量 Total Weight: <strong>${totalWeight.toFixed(2)} kg</strong>
+    `;
+  }
+
+  function showError(msg) {
+    document.getElementById('result').innerHTML = `<span style="color:red;">❌ ${msg}</span>`;
+  }
+
+  toggleFields(); // 初始化显示
+</script>
 </body>
 </html>
